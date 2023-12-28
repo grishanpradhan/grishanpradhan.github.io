@@ -99,3 +99,55 @@ function displayImage() {
         };
     };
 }
+
+async function saveImage(){
+    const newHandle= await window.showSaveFilePicker({
+        // suggestedName: 'image.png',
+        types: [
+          {
+            description: 'PNG Image',
+            accept: {
+              'image/png': ['.png'],
+            },
+          },
+        ],
+      }); 
+
+    const writableStream = await newHandle.createWritable();
+
+    const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+    const request = indexedDB.open("ImgDB", 1);
+
+    request.onerror = function (event) {
+        console.error("An error occurred with IndexedDB");
+        console.error(event);
+    };
+
+    request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction("Image", "readonly");
+        const store = transaction.objectStore("Image");
+
+        const getRequest = store.get(1);
+
+        getRequest.onsuccess = function (event) {
+            
+            const imageData = event.target.result.binaryString;
+
+            const blob = new Blob([imageData], { type: "image/png" });
+
+            writableStream.write(blob);
+
+            writableStream.close();
+            db.close();
+        };
+
+
+
+        transaction.oncomplete = function() {
+            console.log('Image successfully retrieved');
+        };
+    };
+
+}
