@@ -101,53 +101,36 @@ function displayImage() {
 }
 
 async function saveImage(){
-    const newHandle= await window.showSaveFilePicker();
-    // {
-        // suggestedName: 'image.png',
-    //     types: [
-    //       {
-    //         description: 'PNG Image',
-    //         accept: {
-    //           'image/png': ['.png'],
-    //         },
-    //       },
-    //     ],
-    //   }); 
+    const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
-    const writableStream = await newHandle.createWritable();
+    const request = indexedDB.open("ImgDB", 1);
 
-    // const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+    request.onerror = function (event) {
+        console.error("An error occurred with IndexedDB");
+        console.error(event);
+    };
 
-    // const request = indexedDB.open("ImgDB", 1);
+    request.onsuccess = function (event) {
+        const db = event.target.result;
+        const transaction = db.transaction("Image", "readonly");
+        const store = transaction.objectStore("Image");
 
-    // request.onerror = function (event) {
-    //     console.error("An error occurred with IndexedDB");
-    //     console.error(event);
-    // };
+        const getRequest = store.get(1);
 
-    // request.onsuccess = function (event) {
-    //     const db = event.target.result;
-    //     const transaction = db.transaction("Image", "readonly");
-    //     const store = transaction.objectStore("Image");
-
-    //     const getRequest = store.get(1);
-
-    //     getRequest.onsuccess = function (event) {
+        getRequest.onsuccess = function (event) {
             
-    //         const imageData = event.target.result.binaryString;
+            const imageData = event.target.result.binaryString;
 
-    //         const blob = new Blob([imageData], { type: "image/png" });
+            const blob = new Blob([imageData], { type: "image/png" });
 
-    //         writableStream.write(blob);
+            saveAs(blob, "image.png");
 
-    //         writableStream.close();
-    //         db.close();
-    //     };
+            db.close();
+        };
 
-
-
-        // transaction.oncomplete = function() {
-        //     console.log('Image successfully retrieved');
-        // };
-};
+        transaction.oncomplete = function() {
+            console.log('Image successfully saved');
+        };
+    };
+}
 
