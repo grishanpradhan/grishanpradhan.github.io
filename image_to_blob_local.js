@@ -149,6 +149,5 @@ async function saveImage(){
         // transaction.oncomplete = function() {
         //     console.log('Image successfully retrieved');
         // };
-    };
+};
 
-}
