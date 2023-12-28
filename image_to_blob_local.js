@@ -28,7 +28,8 @@ function openImage() {
                 };
 
                 request.onupgradeneeded = (event)=>{
-                    const db = event.target.result;
+                    // const db = event.target.result;
+                    const db=request.result;
                     console.log(db);
                     db.createObjectStore("Image", {keyPath:"id"});
                 };
