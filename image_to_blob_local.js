@@ -27,7 +27,7 @@ function openImage() {
                     console.error(event);
                 };
 
-                request.onupgradeneeded = (event)=>{
+                request.onupgradeneeded = (event)=>{ //executes when version number is upgraded
                     // const db = event.target.result;
                     const db=request.result;
                     console.log(db);
@@ -62,17 +62,14 @@ function openImage() {
 /*Display image button */
 function displayImage() {
     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+    const req = indexedDB.open("ImgDB", 1);
 
-    const request = indexedDB.open("ImgDB", 1);
 
-    request.onerror = function (event) {
-        console.error("An error occurred with IndexedDB");
-        console.error(event);
-    };
+    req.onsuccess= function(event){
+        const db=event.target.result;
 
-    request.onsuccess = function (event) {
-        const db = event.target.result;
-        const transaction = db.transaction("Image", "readonly");
+        try{
+        const transaction=db.transaction("Image","readonly");
         const store = transaction.objectStore("Image");
 
         const getRequest = store.get(1);
@@ -96,14 +93,18 @@ function displayImage() {
 
         transaction.oncomplete = function() {
             console.log('Image successfully retrieved');
-        };
-    };
+        };} catch(error) {
+            console.log("HERE");
+            const delReq = indexedDB.deleteDatabase("ImgDB");
+            console.log(delReq);
+        }
+    }
 }
 
 async function saveImage(){
     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
-    const request = indexedDB.open("ImgDB", 1);
+    const request = indexedDB.open("ImgDB");
 
     request.onerror = function (event) {
         console.error("An error occurred with IndexedDB");
