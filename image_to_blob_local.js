@@ -69,31 +69,32 @@ function displayImage() {
         const db=event.target.result;
 
         try{
-        const transaction=db.transaction("Image","readonly");
-        const store = transaction.objectStore("Image");
+            const transaction=db.transaction("Image","readonly");
+            const store = transaction.objectStore("Image");
 
-        const getRequest = store.get(1);
+            const getRequest = store.get(1);
 
-        getRequest.onsuccess = function (event) {
-            
-            const imageData = event.target.result.binaryString;
+            getRequest.onsuccess = function (event) {
+                
+                const imageData = event.target.result.binaryString;
 
-            const blob = new Blob([imageData], { type: "image/png" });
+                const blob = new Blob([imageData], { type: "image/png" });
 
-            const objectURL = URL.createObjectURL(blob);
+                const objectURL = URL.createObjectURL(blob);
 
-            const imgElement = new Image();
-            imgElement.src = objectURL;
-            console.log(imgElement.src);
+                const imgElement = new Image();
+                imgElement.src = objectURL;
+                console.log(imgElement.src);
 
-            document.getElementById("display").appendChild(imgElement);
+                document.getElementById("display").appendChild(imgElement);
 
-            db.close();
-        };
+                db.close();
+            };
 
-        transaction.oncomplete = function() {
-            console.log('Image successfully retrieved');
-        };} catch(error) {
+            transaction.oncomplete = function() {
+                console.log('Image successfully retrieved');
+            };
+        } catch(error) {
             console.log("HERE");
             const delReq = indexedDB.deleteDatabase("ImgDB");
             console.log(delReq);
@@ -101,6 +102,7 @@ function displayImage() {
     }
 }
 
+/* save the image */
 async function saveImage(){
     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -113,25 +115,31 @@ async function saveImage(){
 
     request.onsuccess = function (event) {
         const db = event.target.result;
-        const transaction = db.transaction("Image", "readonly");
-        const store = transaction.objectStore("Image");
 
-        const getRequest = store.get(1);
+    try{
+            const transaction = db.transaction("Image", "readonly");
+            const store = transaction.objectStore("Image");
 
-        getRequest.onsuccess = function (event) {
-            
-            const imageData = event.target.result.binaryString;
+            const getRequest = store.get(1);
 
-            const blob = new Blob([imageData], { type: "image/png" });
+            getRequest.onsuccess = function (event) {
+                
+                const imageData = event.target.result.binaryString;
 
-            saveAs(blob, "image.png");
+                const blob = new Blob([imageData], { type: "image/png" });
 
-            db.close();
-        };
+                saveAs(blob, "image.png");
 
-        transaction.oncomplete = function() {
-            console.log('Image successfully saved');
-        };
+                db.close();
+            };
+
+            transaction.oncomplete = function() {
+                console.log('Image successfully saved');
+            };
+        } catch(error) {
+            const delReq = indexedDB.deleteDatabase("ImgDB");
+            console.log(delReq);
+        }
     };
 }
 
