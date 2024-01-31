@@ -10,27 +10,31 @@ function openImage() {
 
         if (selectedFile){
             
-            console.log('Selected file:', selectedFile);
+            console.log('Selected file:', selectedFile, '\n' , 'File type:', selectedFile.type, '\n');
 
             var reader = new FileReader();
 
-            reader.onload = function(e){
-                const binaryString = e.target.result;
-                console.log('Array Buffer Content: ',binaryString);
+            reader.onload = e=> {
+                const imageInfo = e.target.result;
+
+                // console.log('Type:', binaryString.type); 
+
+                console.log('Array Buffer Content: ', imageInfo);
 
                 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
                 const request = indexedDB.open("ImgDB",1);
 
                 request.onerror=function(event){
-                    console.error("An error occurred with IndexedDB");
+                    console.error("An error occurred with opening IndexedDB");
                     console.error(event);
                 };
 
                 request.onupgradeneeded = (event)=>{ //executes when version number is upgraded
-                    // const db = event.target.result;
+                    //only place where you can alter the structure of the database.
                     const db=request.result;
                     console.log(db);
+                    console.log('onUpgradeneeded just ran');
                     db.createObjectStore("Image", {keyPath:"id"});
                 };
 
@@ -40,7 +44,7 @@ function openImage() {
 
                     const store = transaction.objectStore("Image");
 
-                    const request = store.put({id:1, binaryString});
+                    const request = store.put({id:1, imageInfo});
 
                     request.onsuccess = function(event) {
                         console.log('Image added to IndexedDB');
@@ -76,7 +80,9 @@ function displayImage() {
 
             getRequest.onsuccess = function (event) {
                 
-                const imageData = event.target.result.binaryString;
+                const imageData = event.target.result.imageInfo; //the value in the database contains {id:1, binaryString:ArrayBuffer(...)}
+
+                console.log('imageData:',imageData);
 
                 const blob = new Blob([imageData], { type: "image/png" });
 
@@ -84,7 +90,8 @@ function displayImage() {
 
                 const imgElement = new Image();
                 imgElement.src = objectURL;
-                console.log(imgElement.src);
+                console.log('Object URL:', imgElement.src);
+                console.log('Blob size(bytes): ', blob.size)
 
                 document.getElementById("display").appendChild(imgElement);
 
@@ -124,7 +131,7 @@ async function saveImage(){
 
             getRequest.onsuccess = function (event) {
                 
-                const imageData = event.target.result.binaryString;
+                const imageData = event.target.result.imageInfo;
 
                 const blob = new Blob([imageData], { type: "image/png" });
 
@@ -142,4 +149,3 @@ async function saveImage(){
         }
     };
 }
-
