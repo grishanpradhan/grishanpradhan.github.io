@@ -14,12 +14,10 @@ function openImage(){
 
             var reader = new FileReader();
 
-            
             reader.onload = function(e){
                 const srcImg = e.target.result;
 
                 // console.log('srcImg:',srcImg);
-
 
                 let canvas = document.createElement('canvas');
 
@@ -57,9 +55,9 @@ function openImage(){
 
                 }
                 // img.src = "pic.jpg"
-                const blob = URL.createObjectURL(selectedFile);
-                console.log(blob);
-                img.src=blob;
+                const objectURL = URL.createObjectURL(selectedFile);
+                console.log(objectURL);
+                img.src=objectURL;
                 console.log(img.width);
 
             }
