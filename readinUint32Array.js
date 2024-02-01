@@ -52,7 +52,7 @@ function openImage(){
 
                     console.log(pixelData.length);
                     console.log('The pixel data:', pixelData);
-                    const x = new Uint32Array(pixelData);
+                    const x = new Uint32Array(pixelData.buffer);
                     console.log(x);
 
                 }
