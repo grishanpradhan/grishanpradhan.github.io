@@ -2,7 +2,7 @@ function openImage(){
     
     var input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/jpg';
+    input.accept = 'image/jpeg';
 
 
     input.addEventListener('change', function(event){
