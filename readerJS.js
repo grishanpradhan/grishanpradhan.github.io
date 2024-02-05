@@ -41,7 +41,7 @@ function openImage(){
                     canvas.width = canvasWidth;
                     canvas.height = canvasHeight;
 
-                    const resp = await fetch(e.target.src);
+                    const resp = await fetch(theURL);
                     const _image_ = await resp.blob();
                     const image_ = await createImageBitmap(_image_, {
                         colorSpaceConversion: "none"
@@ -57,6 +57,17 @@ function openImage(){
                     console.log('The pixel data:', pixelData);
                     const colorRGBA = new Uint32Array(pixelData.buffer);
                     console.log(colorRGBA);
+
+                    var count=0;
+                    var uniqueColorCollection = [];
+                    for(i=0;i<colorRGBA.length;i++){
+                        if (!uniqueColorCollection.includes(colorRGBA[i])){
+                            count++;
+                            uniqueColorCollection.push(colorRGBA[i]);
+                        }
+                    }
+
+                    console.log('colorRGBA count:', colorRGBA.length,'\n Number of unique colors in the given image:',count,'\n uniqueColorCollection:', uniqueColorCollection);   
 
                     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
                     const request = indexedDB.open("ImgDB",1);
@@ -91,9 +102,9 @@ function openImage(){
                         };
                     };
 
-                    function addtoIDB(){
+                    // function addtoIDB(){
                         
-                    }
+                    // }
 
                 }
                 // img.src = "pic.jpg"
