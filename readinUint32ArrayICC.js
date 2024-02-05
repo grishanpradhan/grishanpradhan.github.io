@@ -61,7 +61,7 @@ function openImage(){
                 }
                 // img.src = "pic.jpg"
                 const objectURL = URL.createObjectURL(selectedFile);
-                console.log(objectURL);
+                console.log('objectURL', objectURL);
                 img.src=objectURL;
                 console.log(img.width);
 
