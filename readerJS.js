@@ -62,7 +62,7 @@ function openImage(){
 
 
                     console.time();
-                    var count=0;
+                    // var count=0;
                     var uniqueColorCollection = []; //stores in the array the unique colors found in the image
                     var uniqueColorCounts = []; //counts the number of colors for respective colors in the uniqueColorCollection
                     var imageColorInfo=[]; //stores the index of color instead of pixels information
@@ -108,7 +108,7 @@ function openImage(){
 
                     console.log('image pixel information:', imageColorInfo);
 
-                    console.log('Number of unique colors in the given image:',count,'\n uniqueColorCollection:', uniqueColorCollection, '\n uniqueColorCounts',uniqueColorCounts);   
+                    console.log('Number of unique colors in the given image:',uniqueColorCounts.length,'\n uniqueColorCollection:', uniqueColorCollection, '\n uniqueColorCounts',uniqueColorCounts);   
 
                     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
                     const request = indexedDB.open("ImgDB",1);
