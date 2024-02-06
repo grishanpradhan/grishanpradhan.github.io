@@ -2,7 +2,7 @@ function openImage(){
     
     var input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/jpeg';
+    input.accept = 'image/png';
 
 
     input.addEventListener('change', function(event){
@@ -33,7 +33,7 @@ function openImage(){
 
                     const theURL = e.target.src;
 
-                    console.log(img.width,img.height);
+                    console.log('image width:',img.width,'\n image height:',img.height);
 
                     canvasWidth = img.width;
                     canvasHeight = img.height;
@@ -51,23 +51,64 @@ function openImage(){
 
                     var imageData = context.getImageData(0,0,canvasWidth,canvasHeight);
 
-                    var pixelData = imageData.data;
+                    console.log(imageData);
 
-                    console.log(pixelData.length);
+                    var pixelData = imageData.data; //stores in array the R, G, B and A values of an image separately
+
+                    console.log('pixelData length:',pixelData.length);
                     console.log('The pixel data:', pixelData);
-                    const colorRGBA = new Uint32Array(pixelData.buffer);
-                    console.log(colorRGBA);
+                    const colorRGBA = new Uint32Array(pixelData.buffer); //pixelData converted to 32-bit arrays
+                    console.log('The list of colors in RGBA:',colorRGBA);
 
+
+                    console.time();
                     var count=0;
-                    var uniqueColorCollection = [];
-                    for(i=0;i<colorRGBA.length;i++){
-                        if (!uniqueColorCollection.includes(colorRGBA[i])){
-                            count++;
-                            uniqueColorCollection.push(colorRGBA[i]);
+                    var uniqueColorCollection = []; //stores in the array the unique colors found in the image
+                    var uniqueColorCounts = []; //counts the number of colors for respective colors in the uniqueColorCollection
+                    var imageColorInfo=[]; //stores the index of color instead of pixels information
+                    var currentColor, lastColor;
+                    var lastIndex = 0;
+                    currentColor = colorRGBA[0];
+                    uniqueColorCollection.push(currentColor);
+                    uniqueColorCounts[0]=1;
+                    lastColor = currentColor;
+                    imageColorInfo[0] = lastIndex;
+                    for(i=1;i<colorRGBA.length;i++){
+                        currentColor = colorRGBA[i];
+                        if (lastColor != currentColor)
+                        {
+                            var index = uniqueColorCollection.indexOf(currentColor);
+                            if (index==-1)
+                            {
+                                uniqueColorCollection.push(currentColor);
+                                uniqueColorCounts.push(1);
+                                lastIndex = uniqueColorCollection.length-1;
+                                if (lastIndex>=255)
+                                    break;
+                            }
+                            else
+                            {
+                                lastIndex = index;
+                            }
+                            lastColor=currentColor;
                         }
+                        imageColorInfo[i] = lastIndex;
+                        uniqueColorCounts[lastIndex]++;
                     }
 
-                    console.log('colorRGBA count:', colorRGBA.length,'\n Number of unique colors in the given image:',count,'\n uniqueColorCollection:', uniqueColorCollection);   
+                    console.log('Time for imageColorInfo and uniqueColorCount:')
+                    console.timeEnd();
+
+
+
+                    var imageColorInfo=[];
+                    for (i=0;i<canvasHeight*canvasWidth;i++){
+                                imageColorInfo[i] = uniqueColorCollection.indexOf(colorRGBA[i]);
+                    }
+
+                    console.log('image pixel information:', imageColorInfo);
+
+                    console.log('Number of unique colors in the given image:',count,'\n uniqueColorCollection:', uniqueColorCollection, '\n uniqueColorCounts',uniqueColorCounts);   
 
                     const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
                     const request = indexedDB.open("ImgDB",1);
@@ -92,8 +133,9 @@ function openImage(){
 
                         const store = transaction.objectStore("Image");
 
-                        const request = store.put({id:'colorRGBA', colorRGBA});
-
+                        console.time();
+                        const request = store.put({id: 'The color array', colorRGBA});
+                        console.timeEnd();
                         request.onsuccess = function(event) {
                             console.log('Image added to IndexedDB');
                         };
@@ -101,11 +143,6 @@ function openImage(){
                             db.close();
                         };
                     };
-
-                    // function addtoIDB(){
-                        
-                    // }
-
                 }
                 // img.src = "pic.jpg"
                 const objectURL = URL.createObjectURL(selectedFile);
