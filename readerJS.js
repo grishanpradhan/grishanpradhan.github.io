@@ -135,8 +135,11 @@ function openImage(){
                         const request1 = store.put({id: 'The colors', uniqueColorCollection});
                         const request2 = store.put({id: 'The imageColorInfo', imageColorInfo});
                         console.timeEnd();
-                        request.onsuccess = function(event) {
-                            console.log('Image added to IndexedDB');
+                        request1.onsuccess = function(event) {
+                            console.log('Unique Colors from the image has been added to IndexedDB');
+                        };
+                        request2.onsuccess = function(event) {
+                            console.log('imageColorInfo added to IndexedDB');
                         };
                         transaction.oncomplete = function(){
                             db.close();
