@@ -63,11 +63,11 @@ function openImage(){
 
                     console.time();
                     // var count=0;
-                    var uniqueColorCollection = []; //stores in the array the unique colors found in the image
+                    var uniqueColorCollection = []; //stores the unique colors found in the image
                     var uniqueColorCounts = []; //counts the number of colors for respective colors in the uniqueColorCollection
                     var imageColorInfo=[]; //stores the index of color instead of pixels information
                     var currentColor, lastColor;
-                    var lastIndex = 0;
+                    var lastIndex = 0; //index for uniqueColorCollection, and cannot exceed 255
                     currentColor = colorRGBA[0];
                     uniqueColorCollection.push(currentColor);
                     uniqueColorCounts[0]=1;
@@ -80,6 +80,7 @@ function openImage(){
                             var index = uniqueColorCollection.indexOf(currentColor);
                             if (index==-1)
                             {
+                                // console.log('Here');
                                 uniqueColorCollection.push(currentColor);
                                 uniqueColorCounts.push(1);
                                 lastIndex = uniqueColorCollection.length-1;
@@ -89,22 +90,19 @@ function openImage(){
                             else
                             {
                                 lastIndex = index;
+                                uniqueColorCounts[lastIndex]++;
                             }
                             lastColor=currentColor;
                         }
+                        else
+                        {
+                            uniqueColorCounts[lastIndex]++;
+                        }
                         imageColorInfo[i] = lastIndex;
-                        uniqueColorCounts[lastIndex]++;
                     }
 
-                    console.log('Time for imageColorInfo and uniqueColorCount:')
+                    console.log('Time for imageColorInfo and uniqueColorCount:') 
                     console.timeEnd();
-
-
-
-                    var imageColorInfo=[];
-                    for (i=0;i<canvasHeight*canvasWidth;i++){
-                                imageColorInfo[i] = uniqueColorCollection.indexOf(colorRGBA[i]);
-                    }
 
                     console.log('image pixel information:', imageColorInfo);
 
@@ -134,7 +132,8 @@ function openImage(){
                         const store = transaction.objectStore("Image");
 
                         console.time();
-                        const request = store.put({id: 'The color array', colorRGBA});
+                        const request1 = store.put({id: 'The colors', uniqueColorCollection});
+                        const request2 = store.put({id: 'The imageColorInfo', imageColorInfo});
                         console.timeEnd();
                         request.onsuccess = function(event) {
                             console.log('Image added to IndexedDB');
