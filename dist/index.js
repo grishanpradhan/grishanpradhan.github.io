@@ -43,6 +43,7 @@ function openImage() {
                             this.cuts = 0;
                             this.material = 1;
                             this.pileHeight = 50;
+                            this.area = 0;
                         }
                     }
                     // console.time();
@@ -58,6 +59,7 @@ function openImage() {
                     imageColorInfo[0] = lastIndex; //index image
                     var i = 0;
                     var totalKnots = 0;
+                    var totalCuts = 0;
                     var cutsUpdated;
                     for (var y = 0; y < canvasHeight; y++) {
                         for (var x = 0; x < canvasWidth; x++) {
@@ -65,7 +67,12 @@ function openImage() {
                             currentColor = colorRGBA[i];
                             if (lastColor != currentColor) {
                                 uniqueColorCounts[lastIndex].cuts++;
-                                console.log("if lastColor!=currentColor", uniqueColorCounts[lastIndex].color, uniqueColorCounts[lastIndex].cuts);
+                                totalCuts++;
+                                /*(console.log(
+                                  "if lastColor!=currentColor",
+                                  uniqueColorCounts[lastIndex].color,
+                                  uniqueColorCounts[lastIndex].cuts
+                                );*/
                                 cutsUpdated = true;
                                 var index = indexArray.indexOf(currentColor);
                                 if (index == -1) {
@@ -88,21 +95,30 @@ function openImage() {
                                     //   uniqueColorCounts[lastIndex].cuts
                                     // );
                                     uniqueColorCounts[lastIndex].knots++;
+                                    totalKnots++;
                                 }
                                 lastColor = currentColor;
                             }
                             else {
                                 uniqueColorCounts[lastIndex].knots++;
+                                totalKnots++;
                             }
                             imageColorInfo[i] = lastIndex;
                             i++;
                         }
                         if (!cutsUpdated) {
                             uniqueColorCounts[lastIndex].cuts++;
-                            console.log("if edge:", uniqueColorCounts[lastIndex].color, uniqueColorCounts[lastIndex].cuts, cutsUpdated);
+                            totalCuts++;
+                            /*console.log(
+                              "if edge:",
+                              uniqueColorCounts[lastIndex].color,
+                              uniqueColorCounts[lastIndex].cuts,
+                              cutsUpdated
+                            );*/
                         }
                     }
                     uniqueColorCounts[0].knots--;
+                    totalKnots--;
                     // if (!cutsUpdated) {
                     //   uniqueColorCounts[lastIndex].cuts++;
                     //   console.log(
@@ -125,10 +141,44 @@ function openImage() {
                         uniqueColorCounts[lastIndex].cuts
                       );
                     }*/
-                    console.log("total knots: ", totalKnots);
-                    console.log("indexArray", indexArray);
-                    console.log("image pixel information:", imageColorInfo);
-                    console.log("Number of unique colors in the given image:", uniqueColorCounts.length, "\n index Array:", indexArray, "\n uniqueColorCounts", uniqueColorCounts);
+                    // console.log("indexArray", indexArray);
+                    // console.log("image pixel information:", imageColorInfo);
+                    // console.log(
+                    //   "Number of unique colors in the given image:",
+                    //   uniqueColorCounts.length,
+                    //   "\n index Array:",
+                    //   indexArray,
+                    //   "\n uniqueColorCounts",
+                    //   uniqueColorCounts
+                    // );
+                    for (var m = 0; m < indexArray.length; m++) {
+                        console.log("1", uniqueColorCounts[m].color);
+                        console.log("2", (uniqueColorCounts[m].color >>> 24) & 0xff);
+                        console.log("3", ((uniqueColorCounts[m].color >>> 24) & 0xff) == 0);
+                        if (((uniqueColorCounts[m].color >>> 24) & 0xff) == 0) {
+                            totalKnots -= uniqueColorCounts[m].knots;
+                            totalCuts -= uniqueColorCounts[m].cuts;
+                        }
+                    }
+                    const knotsPerInch = 10;
+                    const linesPerInch = 10;
+                    //height and width in feet
+                    var width = canvasWidth / (knotsPerInch * 12);
+                    var height = canvasHeight / (linesPerInch * 12);
+                    const area = height * width;
+                    console.log("Width:", width, "ft.");
+                    console.log("Height:", height, "ft.");
+                    console.log("Area:", area, "sq. ft.");
+                    console.log("KPU:", knotsPerInch, "/ inch");
+                    console.log("LPU:", linesPerInch, "/ inch");
+                    console.log("Knots: ", totalKnots);
+                    console.log("Cuts: ", totalCuts);
+                    console.log("Ratio: ", (totalCuts / totalKnots) * 100, "%");
+                    for (var i = 0; i < indexArray.length; i++) {
+                        uniqueColorCounts[i].area =
+                            (uniqueColorCounts[i].knots / totalKnots) * 100;
+                        console.log("area of color:", uniqueColorCounts[i].color, "=", uniqueColorCounts[i].area);
+                    }
                     const indexedDB = window.indexedDB ||
                         window.mozIndexedDB ||
                         window.webkitIndexedDB ||
