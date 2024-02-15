@@ -92,7 +92,7 @@ function openImage() {
               currentColor = colorRGBA[i];
               if (lastColor != currentColor) {
                 uniqueColorCounts[lastIndex].cuts++;
-                totalCuts++;
+                // totalCuts++;
                 /*(console.log(
                   "if lastColor!=currentColor",
                   uniqueColorCounts[lastIndex].color,
@@ -118,19 +118,19 @@ function openImage() {
                   //   uniqueColorCounts[lastIndex].cuts
                   // );
                   uniqueColorCounts[lastIndex].knots++;
-                  totalKnots++;
+                  // totalKnots++;
                 }
                 lastColor = currentColor;
               } else {
                 uniqueColorCounts[lastIndex].knots++;
-                totalKnots++;
+                // totalKnots++;
               }
               imageColorInfo[i] = lastIndex;
               i++;
             }
             if (!cutsUpdated) {
               uniqueColorCounts[lastIndex].cuts++;
-              totalCuts++;
+              // totalCuts++;
               /*console.log(
                 "if edge:",
                 uniqueColorCounts[lastIndex].color,
@@ -140,7 +140,7 @@ function openImage() {
             }
           }
           uniqueColorCounts[0].knots--;
-          totalKnots--;
+          // totalKnots--;
           // if (!cutsUpdated) {
           //   uniqueColorCounts[lastIndex].cuts++;
           //   console.log(
@@ -178,13 +178,14 @@ function openImage() {
           //   uniqueColorCounts
           // );
 
+          //calculating the knots and cuts for the carpets
           for (var m = 0; m < indexArray.length; m++) {
-            console.log("1", uniqueColorCounts[m].color);
-            console.log("2", (uniqueColorCounts[m].color >>> 24) & 0xff);
-            console.log("3", ((uniqueColorCounts[m].color >>> 24) & 0xff) == 0);
-            if (((uniqueColorCounts[m].color >>> 24) & 0xff) == 0) {
-              totalKnots -= uniqueColorCounts[m].knots;
-              totalCuts -= uniqueColorCounts[m].cuts;
+            // console.log("1", uniqueColorCounts[m].color);
+            // console.log("2", (uniqueColorCounts[m].color >>> 24) & 0xff);
+            // console.log("3", ((uniqueColorCounts[m].color >>> 24) & 0xff) == 0);
+            if (((uniqueColorCounts[m].color >>> 24) & 0xff) != 0) {
+              totalKnots += uniqueColorCounts[m].knots;
+              totalCuts += uniqueColorCounts[m].cuts;
             }
           }
 
@@ -210,9 +211,20 @@ function openImage() {
               "area of color:",
               uniqueColorCounts[i].color,
               "=",
-              uniqueColorCounts[i].area
+              uniqueColorCounts[i].area,
+              "\n",
+              "knots on Rug for color",
+              uniqueColorCounts[i].color,
+              "=",
+              uniqueColorCounts[i].knots,
+              "\n",
+              "cuts on Rug for Color:",
+              "=",
+              uniqueColorCounts[i].cuts
             );
           }
+
+          console.log(uniqueColorCounts);
 
           const indexedDB =
             window.indexedDB ||
@@ -277,4 +289,14 @@ function openImage() {
   });
 
   input.click();
+}
+
+function saveImage() {
+  var button: HTMLButtonElement = document.createElement("button");
+
+  button.addEventListener("click", function () {
+    console.log("Button clicked");
+  });
+
+  button.click();
 }
