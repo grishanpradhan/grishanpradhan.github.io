@@ -5,7 +5,14 @@ function openImage() {
     input.addEventListener("change", function (event) {
         var selectedFile = event.target.files[0];
         if (selectedFile) {
-            // console.log('Selected file:', selectedFile, '\n' , 'File type:', selectedFile.type, '\n');
+            // console.log(
+            //   "Selected file:",
+            //   selectedFile,
+            //   "\n",
+            //   "File type:",
+            //   selectedFile.type,
+            //   "\n"
+            // );
             var reader = new FileReader();
             reader.onload = function (e) {
                 const srcImg = e.target.result;
@@ -167,6 +174,8 @@ function openImage() {
                     var width = canvasWidth / (knotsPerInch * 12);
                     var height = canvasHeight / (linesPerInch * 12);
                     const area = height * width;
+                    /*
+                    //Print on console
                     console.log("Width:", width, "ft.");
                     console.log("Height:", height, "ft.");
                     console.log("Area:", area, "sq. ft.");
@@ -174,14 +183,15 @@ function openImage() {
                     console.log("LPU:", linesPerInch, "/ inch");
                     console.log("Knots: ", totalKnots);
                     console.log("Cuts: ", totalCuts);
-                    console.log("Ratio: ", (totalCuts / totalKnots) * 100, "%");
+                    console.log("Ratio: ", (totalCuts / totalKnots) * 100, "%");*/
                     for (var i = 0; i < indexArray.length; i++) {
                         uniqueColorCounts[i].area =
                             (uniqueColorCounts[i].knots / totalKnots) * 100;
                         console.log("area of color:", uniqueColorCounts[i].color, "=", uniqueColorCounts[i].area, "\n", "knots on Rug for color", uniqueColorCounts[i].color, "=", uniqueColorCounts[i].knots, "\n", "cuts on Rug for Color:", "=", uniqueColorCounts[i].cuts);
                     }
                     console.log(uniqueColorCounts);
-                    // var nameEl = document.getElementById("Name");
+                    //MATERIAL ESTIMATION
+                    var nameEl = document.getElementById("Name");
                     var widthEl = document.getElementById("Width");
                     var lengthEl = document.getElementById("Length");
                     var areaEl = document.getElementById("Area");
@@ -190,6 +200,7 @@ function openImage() {
                     var knotsEl = document.getElementById("Knots");
                     var cutsEl = document.getElementById("Cuts");
                     var ratioEl = document.getElementById("Ratio");
+                    nameEl.textContent = "Name: " + selectedFile.name;
                     widthEl.textContent = "Width: " + canvasWidth + " ft.";
                     lengthEl.innerHTML = "Height: " + canvasHeight + " ft.";
                     areaEl.innerHTML = "Area: " + area + " sq. ft.";
@@ -232,18 +243,7 @@ function openImage() {
                             DistExcessPerc.innerHTML = "N/A";
                         }
                     }
-                    //populating the Material Estimate table
-                    // document.getElementById('color').innerText=;
-                    // document.getElementById('code').innerText=;
-                    // document.getElementById('material').innerText=;
-                    // document.getElementById('Area').innerText=;
-                    // document.getElementById('ConsumptionRug').innerText=;
-                    // document.getElementById('Knots').innerText=;
-                    // document.getElementById('Cuts').innerText=;
-                    // document.getElementById('CutWastage').innerText=;
-                    // document.getElementById('ConsumptionIncCuts').innerText=;
-                    // document.getElementById('Distribution').innerText=;
-                    // document.getElementById('DistExcessPerc').innerText=;
+                    // IndexedDB
                     const indexedDB = window.indexedDB ||
                         window.mozIndexedDB ||
                         window.webkitIndexedDB ||
