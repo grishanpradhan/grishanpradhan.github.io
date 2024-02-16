@@ -226,6 +226,78 @@ function openImage() {
 
           console.log(uniqueColorCounts);
 
+          // var nameEl = document.getElementById("Name");
+          var widthEl = document.getElementById("Width");
+          var lengthEl = document.getElementById("Length");
+          var areaEl = document.getElementById("Area");
+          var kpuEl = document.getElementById("KPU");
+          var lpuEl = document.getElementById("LPU");
+          var knotsEl = document.getElementById("Knots");
+          var cutsEl = document.getElementById("Cuts");
+          var ratioEl = document.getElementById("Ratio");
+
+          widthEl.textContent = "Width: " + canvasWidth + " ft.";
+          lengthEl.innerHTML = "Height: " + canvasHeight + " ft.";
+          areaEl.innerHTML = "Area: " + area + " sq. ft.";
+          kpuEl.innerHTML = "KPU: " + knotsPerInch + " / inch";
+          lpuEl.innerHTML = "LPU: " + linesPerInch + " / inch";
+          knotsEl.innerHTML = "Knots: " + totalKnots;
+          cutsEl.innerHTML = "Cuts: " + totalCuts;
+          ratioEl.innerHTML =
+            "Ratio: " + ((totalCuts / totalKnots) * 100).toFixed(2) + " %";
+
+          var table1 = document.getElementById("table1") as HTMLTableElement;
+          var table2 = document.getElementById("table2") as HTMLTableElement;
+          // var newRow = document.createElement("tr");
+          for (var i = 0; i < indexArray.length; i++) {
+            if (((uniqueColorCounts[i].color >>> 24) & 0xff) != 0) {
+              // var cell = document.createEleme1nt("td");
+              // cell.textContent = uniqueColorCounts[i].color;
+              var table1Row = table1.insertRow();
+
+              var Color = table1Row.insertCell(0);
+              var Code = table1Row.insertCell(1);
+              var Material = table1Row.insertCell(2);
+              var Area = table1Row.insertCell(3);
+              var Consumption_on_Rug = table1Row.insertCell(4);
+
+              Color.innerHTML = uniqueColorCounts[i].color.toString();
+              Code.innerHTML = "CODE";
+              Material.innerHTML = "WOOL";
+              Area.innerHTML = uniqueColorCounts[i].area.toFixed(2);
+              Consumption_on_Rug.innerHTML = "N/A";
+
+              var table2Row = table2.insertRow();
+
+              var knotsonRug = table2Row.insertCell(0);
+              var cutsOnRugs = table2Row.insertCell(1);
+              var cutsWastage = table2Row.insertCell(2);
+              var consumptionIncCuts = table2Row.insertCell(3);
+              var distribution = table2Row.insertCell(4);
+              var DistExcessPerc = table2Row.insertCell(5);
+
+              knotsonRug.innerHTML = uniqueColorCounts[i].knots.toString();
+              cutsOnRugs.innerHTML = uniqueColorCounts[i].cuts.toString();
+              cutsWastage.innerHTML = "N/A";
+              consumptionIncCuts.innerHTML = "N/A";
+              distribution.innerHTML = "N/A";
+              DistExcessPerc.innerHTML = "N/A";
+            }
+          }
+
+          //populating the Material Estimate table
+          // document.getElementById('color').innerText=;
+          // document.getElementById('code').innerText=;
+          // document.getElementById('material').innerText=;
+          // document.getElementById('Area').innerText=;
+          // document.getElementById('ConsumptionRug').innerText=;
+          // document.getElementById('Knots').innerText=;
+          // document.getElementById('Cuts').innerText=;
+          // document.getElementById('CutWastage').innerText=;
+          // document.getElementById('ConsumptionIncCuts').innerText=;
+          // document.getElementById('Distribution').innerText=;
+          // document.getElementById('DistExcessPerc').innerText=;
+
           const indexedDB =
             window.indexedDB ||
             (window as any).mozIndexedDB ||

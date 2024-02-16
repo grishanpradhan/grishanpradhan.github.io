@@ -1,6 +1,7 @@
 <html>
   <head>
     <title>LoadSave</title>
+    <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"
@@ -10,9 +11,66 @@
   ></script>
   <script src="./dist/index.js"></script>
   <body>
-    <button onclick="openImage()">Load Image</button>
-    <!-- <button onclick="displayImage()">Display Png</button> -->
-    <button onclick="saveImage()">Save Image</button>
-    <div id="display"></div>
+    <div id="main-div">
+      <div id="top-div">
+        <button class="btn" onclick="openImage()">Load Image</button>
+        <button class="btn" onclick="saveImage()">Save Image</button>
+      </div>
+      <div id="sub-main-div">
+        <div id="left-div">
+          <p id="Name"></p>
+          <p id="Width"></p>
+          <p id="Length"></p>
+          <p id="Area"></p>
+          <p id="KPU"></p>
+          <p id="LPU"></p>
+          <p id="Knots"></p>
+          <p id="Cuts"></p>
+          <p id="Ratio"></p>
+          <label for="weight">Weight per square meter</label><br />
+          <label for="weight">Wool</label>
+          <input class="input-field" type="number" id="weight" min="0" />
+          <label for="weight">kg</label>
+          <br />
+          <label for="pile-height">Pile Height</label>
+          <input
+            class="input-field"
+            type="number"
+            id="pile-height"
+            min="0.0"
+            max="25.0"
+            step="0.5"
+          />
+          <label for="pile-height">mm</label>
+          <br />
+          <label for="wastage">Wastage per square meter</label><br />
+          <label for="wastage">Wool</label>
+          <input class="input-field" type="number" id="wastage" min="0" />
+          <label for="wastage">kg</label><br />
+          <button onclick="makeEstimation()">Apply</button>
+        </div>
+        <div id="right-div">
+          <table id="table1">
+            <tr>
+              <th>Color</th>
+              <th>Code</th>
+              <th>Material</th>
+              <th>Area</th>
+              <th>Consumption on Rug (KG)</th>
+            </tr>
+          </table>
+          <table id="table2">
+            <tr>
+              <th>Knots on Rug</th>
+              <th>Cuts on Rug</th>
+              <th>Cut Wastage (KG)</th>
+              <th>Consumption Including Cut</th>
+              <th>Distribution 100%</th>
+              <th>Distribution Excess Percentage</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

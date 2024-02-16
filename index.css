@@ -1,0 +1,66 @@
+/* input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"] {
+  -webkit-appearance: none;
+  margin: 0;
+} */
+
+body {
+  margin: 0;
+  background-color: gray;
+}
+
+table,
+th,
+tr,
+td {
+  border: 1px solid;
+}
+
+.btn {
+  /* background-color: white; */
+  height: 80%;
+  margin-top: 0.3%;
+  margin-left: 0.3%;
+}
+
+#main-div {
+  height: 100dvh;
+  width: 100dvw;
+  display: flex;
+  flex-direction: column;
+}
+
+#top-div {
+  /* background-color: black; */
+  width: 100%;
+  height: 5%;
+  /* padding: 1%; */
+}
+
+#sub-main-div {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#left-div {
+  /* background-color: yellow; */
+  height: 100%;
+  width: 20%;
+}
+
+#right-div {
+  /* background-color: rgb(86, 71, 71); */
+  height: 100%;
+  width: 80%;
+}
+
+#table2 {
+  margin-right: 10%;
+}
+
+.input-field {
+  width: 20%;
+}
